@@ -1,0 +1,286 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 24px;
+  font-family: Arial, sans-serif;
+  background: whitesmoke;
+  color: darkslategray;
+}
+
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Header */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  margin: 0;
+  color: royalblue;
+  font-size: 30px;
+}
+
+.header p {
+  margin: 6px 0 0;
+  color: slategray;
+}
+
+.project-label {
+  color: royalblue;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Dashboard cards */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: white;
+  border: 1px solid lightgray;
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.stat-card span {
+  color: slategray;
+  font-size: 14px;
+}
+
+.stat-card h2 {
+  margin: 10px 0 0;
+  font-size: 28px;
+}
+
+/* Sections */
+
+.panel {
+  background: white;
+  border: 1px solid lightgray;
+  border-radius: 8px;
+  padding: 22px;
+  margin-bottom: 24px;
+}
+
+.panel h2 {
+  margin: 0 0 20px;
+  font-size: 20px;
+}
+
+/* Bug form */
+
+.bug-form {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.bug-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.bug-form label:nth-child(2) {
+  grid-column: 1 / -1;
+}
+
+.bug-form button {
+  justify-self: start;
+}
+
+/* Inputs and buttons */
+
+input,
+textarea,
+select,
+button {
+  font: inherit;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  padding: 10px 12px;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  background: white;
+  color: darkslategray;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid lightskyblue;
+  border-color: royalblue;
+}
+
+button {
+  background: royalblue;
+  color: white;
+  border-color: royalblue;
+  cursor: pointer;
+}
+
+button:hover {
+  background: mediumblue;
+}
+
+/* Search and filters */
+
+.filters {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* Bug table */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th,
+td {
+  padding: 14px 12px;
+  border-bottom: 1px solid lightgray;
+  vertical-align: middle;
+}
+
+th {
+  background: whitesmoke;
+  color: slategray;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+td {
+  font-size: 14px;
+}
+
+td strong {
+  overflow-wrap: anywhere;
+}
+
+.description {
+  margin: 6px 0 0;
+  color: slategray;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+/* Priority labels */
+
+.priority {
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.priority.high {
+  color: red;
+}
+
+.priority.medium {
+  color: darkorange;
+}
+
+.priority.low {
+  color: green;
+}
+
+/* Delete button */
+
+.delete-button {
+  background: mistyrose;
+  border-color: lightcoral;
+  color: firebrick;
+  white-space: nowrap;
+}
+
+.delete-button:hover {
+  background: pink;
+}
+
+/* Empty state and footer */
+
+.empty {
+  padding: 24px 12px;
+  text-align: center;
+  color: slategray;
+}
+
+footer {
+  padding: 10px;
+  text-align: center;
+  color: slategray;
+  font-size: 13px;
+}
+
+/* Responsive layout */
+
+@media (max-width: 700px) {
+  body {
+    padding: 14px;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filters {
+    grid-template-columns: 1fr;
+  }
+
+  .bug-form {
+    grid-template-columns: 1fr;
+  }
+
+  .bug-form label:nth-child(2) {
+    grid-column: auto;
+  }
+
+  .header {
+    align-items: flex-start;
+  }
+
+  .project-label {
+    text-align: right;
+  }
+
+  .panel {
+    padding: 14px;
+  }
+}
