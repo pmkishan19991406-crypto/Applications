@@ -1,0 +1,214 @@
+
+/* General page */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: whitesmoke;
+  font-family: Arial, sans-serif;
+  color: darkslategray;
+}
+
+/* Main container */
+.app {
+  width: 750px;
+  max-width: 92%;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px lightgray;
+}
+
+/* Main heading */
+h1 {
+  text-align: center;
+  color: indigo;
+  font-size: 28px;
+  margin-bottom: 30px;
+}
+
+/* Section headings */
+h2 {
+  color: darkslategray;
+  font-size: 20px;
+  margin-bottom: 18px;
+}
+
+/* Progress section */
+.progress {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  background-color: lavender;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+}
+
+.progress h2 {
+  width: 100%;
+  margin: 0;
+}
+
+.progress p {
+  flex: 1;
+  min-width: 120px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 0;
+  text-align: center;
+  font-weight: bold;
+  color: darkslateblue;
+}
+
+/* Horizontal line */
+hr {
+  border: none;
+  border-top: 1px solid lightgray;
+  margin: 25px 0;
+}
+
+/* Add topic section */
+.add-section {
+  margin-bottom: 25px;
+}
+
+/* Input and dropdown */
+input,
+select {
+  padding: 12px;
+  border: 1px solid lightgray;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  margin: 5px 3px 10px 0;
+  background-color: white;
+}
+
+input {
+  width: 45%;
+}
+
+select {
+  max-width: 100%;
+}
+
+input:focus,
+select:focus {
+  border-color: royalblue;
+}
+
+/* Buttons */
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 7px;
+  background-color: indigo;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: darkslateblue;
+}
+
+/* Topic list */
+.topic-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.topic-section li {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 15px;
+  margin-bottom: 12px;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  background-color: aliceblue;
+}
+
+/* Topic name */
+.topic-section li span {
+  flex: 1;
+  min-width: 150px;
+  font-size: 14px;
+  font-weight: bold;
+  overflow-wrap: anywhere;
+}
+
+/* Completed topic */
+.topic-section li span.completed {
+  text-decoration: line-through;
+  color: gray;
+}
+
+/* Complete button */
+.topic-section li button:first-of-type {
+  background-color: seagreen;
+}
+
+.topic-section li button:first-of-type:hover {
+  background-color: darkgreen;
+}
+
+/* Delete button */
+.topic-section li button:last-of-type {
+  background-color: crimson;
+}
+
+.topic-section li button:last-of-type:hover {
+  background-color: darkred;
+}
+
+/* Empty message */
+.topic-section p {
+  text-align: center;
+  padding: 25px;
+  color: gray;
+  background-color: ghostwhite;
+  border-radius: 8px;
+}
+
+/* Mobile screen */
+@media (max-width: 600px) {
+  .app {
+    margin: 20px auto;
+    padding: 18px;
+  }
+
+  h1 {
+    font-size: 23px;
+  }
+
+  .progress p {
+    min-width: 100%;
+  }
+
+  input {
+    width: 100%;
+  }
+
+  select {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .add-section button {
+    width: 100%;
+  }
+
+  .topic-section li {
+    align-items: flex-start;
+  }
+}
+
