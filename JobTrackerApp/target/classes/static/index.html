@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Tracker</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: whitesmoke;
+        }
+
+        header {
+            background: darkslategray;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 15px;
+            border-radius: 8px;
+        }
+
+        .dashboard {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .box {
+            padding: 15px;
+            min-width: 130px;
+            text-align: center;
+            border-radius: 6px;
+        }
+
+        .total { background: lightblue; }
+        .applied { background: lightyellow; }
+        .interview { background: lightcyan; }
+        .offer { background: lightgreen; }
+
+        input, select, button {
+            padding: 9px;
+            margin: 5px;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .save {
+            background: darkslategray;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid lightgray;
+        }
+
+        th {
+            background: darkslategray;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Job Application Tracker</h1>
+    <p>Track your job applications and interviews</p>
+</header>
+
+<!-- Dashboard -->
+<div class="card">
+    <h2>Dashboard</h2>
+
+    <div class="dashboard">
+        <div class="box total">
+            <h3>Total</h3>
+            <h2 id="totalCount">0</h2>
+        </div>
+
+        <div class="box applied">
+            <h3>Applied</h3>
+            <h2 id="appliedCount">0</h2>
+        </div>
+
+        <div class="box interview">
+            <h3>Interview</h3>
+            <h2 id="interviewCount">0</h2>
+        </div>
+
+        <div class="box offer">
+            <h3>Offers</h3>
+            <h2 id="offerCount">0</h2>
+        </div>
+    </div>
+</div>
+
+<!-- Search and Filter -->
+<div class="card">
+    <h2>Search and Filter</h2>
+
+    <input id="searchCompany" placeholder="Search company">
+
+    <button onclick="searchApplications()">Search</button>
+
+    <select id="statusFilter" onchange="filterByStatus()">
+        <option value="">All Status</option>
+        <option value="APPLIED">APPLIED</option>
+        <option value="INTERVIEW">INTERVIEW</option>
+        <option value="OFFER">OFFER</option>
+        <option value="REJECTED">REJECTED</option>
+    </select>
+
+    <button onclick="loadApplications()">Show All</button>
+</div>
+
+<!-- Add and Update Form -->
+<div class="card">
+    <h2>Job Application</h2>
+
+    <input id="companyName" placeholder="Company Name">
+    <input id="jobRole" placeholder="Job Role">
+    <input id="location" placeholder="Location">
+    <input id="salary" type="number" placeholder="Salary">
+
+    <select id="applicationStatus">
+        <option value="APPLIED">APPLIED</option>
+        <option value="INTERVIEW">INTERVIEW</option>
+        <option value="OFFER">OFFER</option>
+        <option value="REJECTED">REJECTED</option>
+    </select>
+
+    <input id="appliedDate" type="date">
+    <input id="followUpDate" type="date">
+
+    <button id="saveButton" class="save"
+            onclick="saveApplication()">
+        Add Application
+    </button>
+</div>
+
+<!-- Applications Table -->
+<div class="card">
+    <h2>Applications</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Company</th>
+                <th>Role</th>
+                <th>Location</th>
+                <th>Salary</th>
+                <th>Status</th>
+                <th>Applied Date</th>
+                <th>Follow Up</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody id="applicationTable"></tbody>
+    </table>
+</div>
+
+<script src="js/app.js"></script>
+
+</body>
+</html>
