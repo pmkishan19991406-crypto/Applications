@@ -1,499 +1,165 @@
-console.log("Job Application Tracker Started");
 
+console.log("Job Tracker Started");
 
-// ==============================
-// Load All Applications
-// ==============================
+const $ = id => document.getElementById(id);
+const API = "/api/applications";
 
-function loadApplications() {
-
-    fetch("/api/applications")
-        .then(response => response.json())
-        .then(data => {
-
-            displayApplications(data);
-            updateDashboard(data);
-
-        })
-        .catch(error => {
-
-            console.error("Error loading applications:", error);
-
-        });
+// 1. Load Applications
+async function loadApplications(url = API) {
+    try {
+        const data = await (await fetch(url)).json();
+        displayApplications(data);
+        updateDashboard(data);
+    } catch (error) {
+        console.error(error);
+        alert("Failed to load applications");
+    }
 }
 
-
-// ==============================
-// Display Applications
-// ==============================
-
+// 2. Display Applications
 function displayApplications(data) {
-
-    const table =
-        document.getElementById("applicationTable");
-
-    table.innerHTML = "";
-
-    data.forEach(job => {
-
-        const row = `
-            <tr>
-
-                <td>${job.jid}</td>
-
-                <td>${job.companyName}</td>
-
-                <td>${job.jobRole}</td>
-
-                <td>${job.location}</td>
-
-                <td>₹${job.salary}</td>
-
-                <td>${job.status}</td>
-
-                <td>${job.appliedDate}</td>
-
-                <td>${job.followUpDate}</td>
-
-                <td>
-
-                    <button onclick="editApplication(${job.jid})">
-                        Edit
-                    </button>
-
-                    <button onclick="deleteApplication(${job.jid})">
-                        Delete
-                    </button>
-
-                </td>
-
-            </tr>
-        `;
-
-        table.innerHTML += row;
-    });
+    $("applicationTable").innerHTML = data.map(j => `
+        <tr>
+            <td>${j.jid}</td>
+            <td>${j.companyName}</td>
+            <td>${j.jobRole}</td>
+            <td>${j.location}</td>
+            <td>₹${j.salary}</td>
+            <td>${j.status}</td>
+            <td>${j.appliedDate ?? ""}</td>
+            <td>${j.followUpDate ?? ""}</td>
+            <td>
+                <button onclick="editApplication(${j.jid})">Edit</button>
+                <button onclick="deleteApplication(${j.jid})">Delete</button>
+            </td>
+        </tr>
+    `).join("");
 }
 
-
-// ==============================
-// Dashboard Counts
-// ==============================
-
+// 3. Dashboard
 function updateDashboard(data) {
-
-    document.getElementById("totalCount").innerText =
-        data.length;
-
-    document.getElementById("appliedCount").innerText =
-        data.filter(job => job.status === "APPLIED").length;
-
-    document.getElementById("interviewCount").innerText =
-        data.filter(job => job.status === "INTERVIEW").length;
-
-    document.getElementById("offerCount").innerText =
-        data.filter(job => job.status === "OFFER").length;
+    $("totalCount").innerText = data.length;
+    $("appliedCount").innerText =
+        data.filter(j => j.status === "APPLIED").length;
+    $("interviewCount").innerText =
+        data.filter(j => j.status === "INTERVIEW").length;
+    $("offerCount").innerText =
+        data.filter(j => j.status === "OFFER").length;
 }
 
-
-// ==============================
-// Search by Company
-// ==============================
-
+// 4. Search
 function searchApplications() {
+    const company = $("searchCompany").value.trim();
 
-    const company =
-        document.getElementById("searchCompany").value.trim();
-
-    if (company === "") {
-
-        loadApplications();
-        return;
-    }
-
-    fetch("/api/applications/search?companyName=" + company)
-        .then(response => response.json())
-        .then(data => {
-
-            displayApplications(data);
-            updateDashboard(data);
-
-        })
-        .catch(error => {
-
-            console.error("Error searching applications:", error);
-
-        });
+    loadApplications(company
+        ? API + "/search?companyName=" + encodeURIComponent(company)
+        : API);
 }
 
-
-// ==============================
-// Filter by Status
-// ==============================
-
+// 5. Filter by Status
 function filterByStatus() {
-
-    const status =
-        document.getElementById("statusFilter").value;
-
-    if (status === "") {
-
-        loadApplications();
-        return;
-    }
-
-    fetch("/api/applications/status/" + status)
-        .then(response => response.json())
-        .then(data => {
-
-            displayApplications(data);
-            updateDashboard(data);
-
-        })
-        .catch(error => {
-
-            console.error("Error filtering applications:", error);
-
-        });
+    const status = $("statusFilter").value;
+    loadApplications(status ? API + "/status/" + status : API);
 }
 
-
-// ==============================
-// Add Job Application
-// ==============================
-
-function addApplication() {
-
-    const jobApplication = {
-
-        companyName:
-            document.getElementById("companyName").value,
-
-        jobRole:
-            document.getElementById("jobRole").value,
-
-        location:
-            document.getElementById("location").value,
-
-        salary:
-            Number(document.getElementById("salary").value),
-
-        status:
-            document.getElementById("applicationStatus").value,
-
-        appliedDate:
-            document.getElementById("appliedDate").value,
-
-        followUpDate:
-            document.getElementById("followUpDate").value
+// 6. Get Form Data
+function getFormData() {
+    return {
+        companyName: $("companyName").value,
+        jobRole: $("jobRole").value,
+        location: $("location").value,
+        salary: Number($("salary").value),
+        status: $("applicationStatus").value,
+        appliedDate: $("appliedDate").value,
+        followUpDate: $("followUpDate").value
     };
+}
 
+// 7. Add or Update
+async function saveApplication() {
+    const jid = $("saveButton").dataset.jid;
+    const job = getFormData();
 
-    fetch("/api/applications", {
+    if (jid) job.jid = Number(jid);
 
-        method: "POST",
+    try {
+        const response = await fetch(API, {
+            method: jid ? "PUT" : "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(job)
+        });
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+        if (!response.ok) throw new Error("Save failed");
 
-        body: JSON.stringify(jobApplication)
+        alert(jid ? "Application updated!" : "Application added!");
+        clearForm();
+        loadApplications();
+    } catch (error) {
+        console.error(error);
+        alert("Failed to save application");
+    }
+}
 
-    })
-    .then(response => {
+// 8. Edit Application
+
+async function editApplication(jid) {
+    try {
+        const response = await fetch("/api/applications/" + jid);
 
         if (!response.ok) {
-            throw new Error("Failed to add application");
+            throw new Error("HTTP " + response.status);
         }
 
-        return response.json();
+        const job = await response.json();
 
-    })
-    .then(() => {
+        $("companyName").value = job.companyName ?? "";
+        $("jobRole").value = job.jobRole ?? "";
+        $("location").value = job.location ?? "";
+        $("salary").value = job.salary ?? "";
+        $("applicationStatus").value = job.status ?? "APPLIED";
+        $("appliedDate").value = job.appliedDate ?? "";
+        $("followUpDate").value = job.followUpDate ?? "";
 
-        alert("Job application added successfully!");
+        $("saveButton").dataset.jid = jid;
+        $("saveButton").innerText = "Update Application";
 
-        clearForm();
+        window.scrollTo({ top: 300, behavior: "smooth" });
 
-        loadApplications();
-
-    })
-    .catch(error => {
-
-        console.error("Error adding application:", error);
-
-        alert("Failed to add application");
-
-    });
+    } catch (error) {
+        console.error("Edit error:", error);
+        alert("Edit failed: " + error.message);
+    }
 }
 
 
-// ==============================
-// Clear Form
-// ==============================
-
+// 9. Clear Form
 function clearForm() {
+    ["companyName", "jobRole", "location", "salary",
+     "appliedDate", "followUpDate"].forEach(id => $(id).value = "");
 
-    document.getElementById("companyName").value = "";
-
-    document.getElementById("jobRole").value = "";
-
-    document.getElementById("location").value = "";
-
-    document.getElementById("salary").value = "";
-
-    document.getElementById("applicationStatus").value =
-        "APPLIED";
-
-    document.getElementById("appliedDate").value = "";
-
-    document.getElementById("followUpDate").value = "";
+    $("applicationStatus").value = "APPLIED";
+    delete $("saveButton").dataset.jid;
+    $("saveButton").innerText = "Add Application";
 }
 
+// 10. Delete Application
+async function deleteApplication(jid) {
+    if (!confirm("Delete this application?")) return;
 
-// ==============================
-// Delete Job Application
-// ==============================
-
-function deleteApplication(jid) {
-
-    const confirmDelete =
-        confirm("Are you sure you want to delete this application?");
-
-    if (!confirmDelete) {
-        return;
-    }
-
-    fetch("/api/applications/" + jid, {
-
-        method: "DELETE"
-
-    })
-    .then(response => {
-
-        if (!response.ok) {
-            throw new Error("Failed to delete application");
-        }
-
-        return response.text();
-
-    })
-    .then(() => {
-
-        alert("Job application deleted successfully!");
-
-        loadApplications();
-
-    })
-    .catch(error => {
-
-        console.error("Error deleting application:", error);
-
-        alert("Failed to delete application");
-
-    });
-}
-
-
-// ==============================
-// Edit Job Application
-// ==============================
-
-function editApplication(jid) {
-
-    fetch("/api/applications/" + jid)
-
-        .then(response => {
-
-            if (!response.ok) {
-                throw new Error("Application not found");
-            }
-
-            return response.json();
-
-        })
-
-        .then(job => {
-
-            document.getElementById("companyName").value =
-                job.companyName;
-
-            document.getElementById("jobRole").value =
-                job.jobRole;
-
-            document.getElementById("location").value =
-                job.location;
-
-            document.getElementById("salary").value =
-                job.salary;
-
-            document.getElementById("applicationStatus").value =
-                job.status;
-
-            document.getElementById("appliedDate").value =
-                job.appliedDate;
-
-            document.getElementById("followUpDate").value =
-                job.followUpDate;
-
-
-            // Store ID for update
-
-            document.getElementById("saveButton").dataset.jid =
-                job.jid;
-
-
-            // Change button text
-
-            document.getElementById("saveButton").innerText =
-                "Update Application";
-
-
-            // Change button action
-
-            document.getElementById("saveButton").onclick =
-                updateApplication;
-
-
-            // Scroll to form
-
-            window.scrollTo({
-
-                top: 300,
-
-                behavior: "smooth"
-
-            });
-
-        })
-
-        .catch(error => {
-
-            console.error("Error loading application:", error);
-
-            alert("Failed to load application");
-
+    try {
+        const response = await fetch(API + "/" + jid, {
+            method: "DELETE"
         });
-}
 
+        if (!response.ok) throw new Error("Delete failed");
 
-// ==============================
-// Update Job Application
-// ==============================
-
-function updateApplication() {
-
-    const button =
-        document.getElementById("saveButton");
-
-
-    const jobApplication = {
-
-        jid:
-            Number(button.dataset.jid),
-
-        companyName:
-            document.getElementById("companyName").value,
-
-        jobRole:
-            document.getElementById("jobRole").value,
-
-        location:
-            document.getElementById("location").value,
-
-        salary:
-            Number(document.getElementById("salary").value),
-
-        status:
-            document.getElementById("applicationStatus").value,
-
-        appliedDate:
-            document.getElementById("appliedDate").value,
-
-        followUpDate:
-            document.getElementById("followUpDate").value
-    };
-
-
-    fetch("/api/applications", {
-
-        method: "PUT",
-
-        headers: {
-
-            "Content-Type": "application/json"
-
-        },
-
-        body: JSON.stringify(jobApplication)
-
-    })
-
-    .then(response => {
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Failed to update application"
-            );
-
-        }
-
-        return response.json();
-
-    })
-
-    .then(() => {
-
-        alert(
-            "Job application updated successfully!"
-        );
-
-        clearForm();
-
-        resetSaveButton();
-
+        alert("Application deleted!");
         loadApplications();
-
-    })
-
-    .catch(error => {
-
-        console.error(
-            "Error updating application:",
-            error
-        );
-
-        alert(
-            "Failed to update application"
-        );
-
-    });
+    } catch (error) {
+        console.error(error);
+        alert("Failed to delete application");
+    }
 }
 
-
-// ==============================
-// Reset Save Button
-// ==============================
-
-function resetSaveButton() {
-
-    const button =
-        document.getElementById("saveButton");
-
-
-    button.innerText =
-        "Add Application";
-
-
-    button.onclick =
-        addApplication;
-
-
-    delete button.dataset.jid;
-}
-
-
-
-// Start Application
-
+// Start
 loadApplications();
