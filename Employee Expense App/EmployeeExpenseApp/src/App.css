@@ -1,0 +1,77 @@
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: aliceblue;
+}
+
+/* Main Heading */
+h1 {
+  text-align: center;
+  color: midnightblue;
+}
+
+h2 {
+  color: royalblue;
+}
+
+/* Login and Signup */
+.container {
+  width: 400px;
+  margin: 60px auto;
+  padding: 25px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px lightgray;
+  text-align: center;
+}
+
+/* Input Fields */
+input, select {
+  width: 90%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid silver;
+  border-radius: 5px;
+}
+
+/* Buttons */
+button {
+  padding: 10px 18px;
+  margin: 8px;
+  background-color: royalblue;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: darkblue;
+}
+
+/* Dashboard */
+.dashboard {
+  width: 85%;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid lightgray;
+}
+
+th {
+  background-color: royalblue;
+  color: white;
+}
